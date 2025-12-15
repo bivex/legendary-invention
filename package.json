@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "node ./bin/cli.js",
-    "test": "jest",
+    "test": "npm run test:analyze",
+    "test:analyze": "node ./bin/cli.js test",
+    "test:jest": "jest",
     "lint": "eslint src/**/*.js"
   },
   "keywords": [
