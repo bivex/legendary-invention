@@ -186,15 +186,25 @@ class VueAntiPatternDetector {
     if (!template) return issues;
 
     this.traverseTemplate(template.ast, (node) => {
-      if (node.type === 1 && this.hasDirective(node, 'v-for') && !this.hasAttribute(node, ':key')) {
-        const severity = filePath.includes('component') ? 'CRITICAL' : 'HIGH';
-        issues.push({
-          pattern: 'VFOR_WITHOUT_KEY',
-          severity,
-          message: 'Missing :key attribute in v-for iteration',
-          location: this.getNodeLocation(node),
-          refactoring: 'Add :key="uniqueId" to the iterated element'
-        });
+      if (node.type === 1 && this.hasDirective(node, 'for')) {
+        // Check if element has :key (v-bind:key directive) or key attribute
+        const hasKeyDirective = node.props && node.props.some(prop =>
+          prop.type === 7 && prop.name === 'bind' && prop.arg?.content === 'key'
+        );
+        const hasKeyAttribute = node.props && node.props.some(prop =>
+          prop.type === 6 && prop.name === 'key'
+        );
+
+        if (!hasKeyDirective && !hasKeyAttribute) {
+          const severity = filePath.includes('component') ? 'CRITICAL' : 'HIGH';
+          issues.push({
+            pattern: 'VFOR_WITHOUT_KEY',
+            severity,
+            message: 'Missing :key attribute in v-for iteration',
+            location: this.getNodeLocation(node),
+            refactoring: 'Add :key="uniqueId" to the iterated element'
+          });
+        }
       }
     });
 
@@ -208,20 +218,30 @@ class VueAntiPatternDetector {
     if (!template) return issues;
 
     this.traverseTemplate(template.ast, (node) => {
-      if (node.type === 1 && this.hasDirective(node, 'v-for')) {
-        const keyAttr = this.getAttribute(node, ':key');
-        const forDirective = this.getDirective(node, 'v-for');
+      if (node.type === 1 && this.hasDirective(node, 'for')) {
+        // Find the key directive (v-bind:key)
+        const keyDirective = node.props && node.props.find(prop =>
+          prop.type === 7 && prop.name === 'bind' && prop.arg?.content === 'key'
+        );
+        const forDirective = this.getDirective(node, 'for');
 
-        if (keyAttr && forDirective) {
-          const forMatch = forDirective.value.match(/\(.*,\s*(\w+)\)/);
-          if (forMatch && forMatch[1] === keyAttr.value) {
-            issues.push({
-              pattern: 'VFOR_INDEX_AS_KEY',
-              severity: 'HIGH',
-              message: 'Using array index as v-for key causes incorrect component reuse',
-              location: this.getNodeLocation(node),
-              refactoring: 'Use unique identifier instead of array index for :key'
-            });
+        if (keyDirective && forDirective) {
+          // Extract the index variable from v-for directive
+          const forContent = forDirective.exp?.content || forDirective.value?.content || forDirective.value;
+          const forMatch = forContent?.match(/\(.*,\s*(\w+)\)/);
+          if (forMatch) {
+            const indexVar = forMatch[1];
+            // Check if the key value matches the index variable
+            const keyContent = keyDirective.exp?.content || keyDirective.value?.content || keyDirective.value;
+            if (keyContent === indexVar) {
+              issues.push({
+                pattern: 'VFOR_INDEX_AS_KEY',
+                severity: 'HIGH',
+                message: 'Using array index as v-for key causes incorrect component reuse',
+                location: this.getNodeLocation(node),
+                refactoring: 'Use unique identifier instead of array index for :key'
+              });
+            }
           }
         }
       }
@@ -237,8 +257,8 @@ class VueAntiPatternDetector {
     if (!template) return issues;
 
     this.traverseTemplate(template.ast, (node) => {
-      if (node.type === 2) { // Text interpolation
-        const expression = node.content;
+      if (node.type === 5) { // Interpolation
+        const expression = node.content?.content || node.content;
         const charCount = expression.length;
         const hasChain = expression.includes('.');
         const hasConditional = expression.includes('?') || expression.includes('&&') || expression.includes('||');
@@ -275,8 +295,12 @@ class VueAntiPatternDetector {
     if (!template) return issues;
 
     this.traverseTemplate(template.ast, (node) => {
-      if (node.type === 1 && this.hasDirective(node, 'v-html')) {
-        const vHtmlAttr = this.getDirective(node, 'v-html');
+      if (node.type === 1 && node.props && node.props.some(prop =>
+        prop.type === 7 && prop.rawName === 'v-html'
+      )) {
+        const vHtmlAttr = node.props.find(prop =>
+          prop.type === 7 && prop.rawName === 'v-html'
+        );
         const severity = this.isDynamicContent(vHtmlAttr.value) ? 'CRITICAL' : 'HIGH';
 
         issues.push({
@@ -1421,7 +1445,7 @@ class VueAntiPatternDetector {
     // Detect watch/watchEffect patterns that should be computed
     const watcherPatterns = [
       // watch(source, (newVal) => { state.value = computedValue })
-      /watch\s*\(\s*([^,]+),\s*\(\s*[^)]*\)\s*=>\s*\{([\s\S]*?)\}\s*\)/g,
+      /watch\s*\(\s*[^,]+,\s*\(\s*[^)]*\)\s*=>\s*\{([\s\S]*?)\}\s*\)/g,
       // watchEffect(() => { state.value = computedValue })
       /watchEffect\s*\(\s*\(\)\s*=>\s*\{([\s\S]*?)\}\s*\)/g
     ];
@@ -1669,8 +1693,8 @@ class VueAntiPatternDetector {
 
     const scriptContent = script.content;
 
-    // Find async functions that contain both await and useStore
-    const asyncFunctionPattern = /(?:async\s+)?(?:function\s+\w+|const\s+\w+\s*=|\w+\s*=)\s*\([^)]*\)\s*=>\s*\{[\s\S]*?\}/g;
+    // Find async functions and setup functions that contain both await and useStore
+    const asyncFunctionPattern = /(?:async\s+)?(?:function\s+\w+|const\s+\w+\s*=|\w+\s*=)\s*\([^)]*\)\s*=>\s*\{[\s\S]*?\}|setup\s*\([^)]*\)\s*\{[\s\S]*?\}/g;
     let match;
 
     while ((match = asyncFunctionPattern.exec(scriptContent)) !== null) {
