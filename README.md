@@ -178,11 +178,51 @@ const { results, report } = analyzeFiles(files, {
 });
 ```
 
+## All Detectors
+
+| Pattern | Category | Severity | Description |
+|---------|----------|----------|-------------|
+| **VIF_WITH_VFOR** | Template Anti-Patterns | CRITICAL | `v-if` and `v-for` on same element creates undefined behavior |
+| **VFOR_WITHOUT_KEY** | Template Anti-Patterns | HIGH/CRITICAL | Missing `:key` attribute in v-for iteration |
+| **VFOR_INDEX_AS_KEY** | Template Anti-Patterns | HIGH | Using array index as v-for key causes incorrect component reuse |
+| **COMPLEX_TEMPLATE_EXPRESSION** | Template Anti-Patterns | MEDIUM | Excessive inline logic in template expressions |
+| **VHTML_XSS_RISK** | Template Anti-Patterns | CRITICAL | Unsanitized dynamic HTML with v-html directive |
+| **DEEP_TEMPLATE_NESTING** | Template Anti-Patterns | MEDIUM | Excessive template nesting depth |
+| **GOD_COMPONENT** | Component Architecture | CRITICAL/HIGH/MEDIUM | Monolithic components with too many responsibilities |
+| **SINGLE_WORD_COMPONENT_NAME** | Component Architecture | CRITICAL | HTML element naming conflicts with single-word components |
+| **PROP_DRILLING** | Component Architecture | MEDIUM | Excessive props passing through multiple component levels |
+| **TIGHT_COUPLING** | Component Architecture | HIGH | Direct parent/child manipulation breaking component isolation |
+| **REF_REACTIVE_CONFUSION** | Reactivity System | CRITICAL | Incorrect reactive primitive usage (ref vs reactive) |
+| **DESTRUCTURING_REACTIVITY_LOSS** | Reactivity System | CRITICAL | Breaking reactive connections through destructuring |
+| **COMPUTED_SIDE_EFFECTS** | Reactivity System | CRITICAL | Impure computed properties with side effects |
+| **DEEP_WATCHER_OVERUSE** | Reactivity System | MEDIUM | Expensive deep observation in watchers |
+| **WATCHER_SHOULD_BE_COMPUTED** | Reactivity System | LOW | Watcher that should be replaced with computed property |
+| **VUEX_ASYNC_IN_MUTATION** | State Management | CRITICAL | Asynchronous operations in Vuex mutations |
+| **VUEX_GOD_STORE** | State Management | HIGH | Monolithic Vuex store modules |
+| **PINIA_CIRCULAR_DEPENDENCY** | State Management | CRITICAL | Cross-store initialization issues in Pinia |
+| **PINIA_USESTORE_AFTER_AWAIT** | State Management | CRITICAL | Store usage after await causing SSR state pollution |
+| **STATE_LOCALIZATION_ANTIPATTERN** | State Management | MEDIUM | Duplicated global state in local components |
+| **UNTYPED_PROVIDE_INJECT** | State Management | MEDIUM | Missing type safety in dependency injection |
+| **INFINITE_NAVIGATION_LOOP** | Router Anti-Patterns | CRITICAL | Unconditional guard redirects causing infinite loops |
+| **MISSING_LAZY_LOADING** | Router Anti-Patterns | HIGH | Eager route component imports without lazy loading |
+| **GOD_GUARD_ANTIPATTERN** | Router Anti-Patterns | MEDIUM | Overloaded navigation guards with multiple responsibilities |
+| **LARGE_LIST_NO_VIRTUALIZATION** | Performance | HIGH | DOM explosion without virtualization for large lists |
+| **MISSING_SHALLOW_REACTIVITY** | Performance | MEDIUM | Deep proxy overhead on large reactive objects |
+| **EVENT_LISTENER_MEMORY_LEAK** | Performance | CRITICAL | Uncleared global event listeners causing memory leaks |
+| **FULL_LIBRARY_IMPORT** | Performance | CRITICAL/HIGH/MEDIUM | Tree-shaking failures with full library imports |
+| **UNTYPED_PROPS** | TypeScript Integration | HIGH | Missing prop type definitions |
+| **UNTYPED_EMITS** | TypeScript Integration | HIGH | Missing event payload types in emits |
+| **REF_TYPE_INFERENCE_ISSUES** | TypeScript Integration | LOW/MEDIUM | Incorrect ref typing and type inference problems |
+| **IMPLEMENTATION_TESTING** | Testing Anti-Patterns | MEDIUM | Testing internal implementation details instead of behavior |
+| **PINIA_STATE_LEAK** | Testing Anti-Patterns | LOW | Store state pollution between test cases |
+| **SNAPSHOT_OVERUSE** | Testing Anti-Patterns | MEDIUM | Excessive snapshot testing |
+
 ## Anti-Pattern Categories
 
 ### Template Anti-Patterns
 - **VIF_WITH_VFOR**: `v-if` and `v-for` on same element (CRITICAL)
 - **VFOR_WITHOUT_KEY**: Missing `:key` in v-for loops
+- **VFOR_INDEX_AS_KEY**: Using array index as v-for key (HIGH)
 - **COMPLEX_TEMPLATE_EXPRESSION**: Excessive inline logic
 - **VHTML_XSS_RISK**: Unsanitized dynamic HTML
 - **DEEP_TEMPLATE_NESTING**: Excessive template depth
@@ -192,13 +232,13 @@ const { results, report } = analyzeFiles(files, {
 - **SINGLE_WORD_COMPONENT_NAME**: HTML element naming conflicts
 - **PROP_DRILLING**: Excessive props passing through levels
 - **TIGHT_COUPLING**: Direct parent/child manipulation
-- **FULL_LIBRARY_IMPORT**: Tree-shaking failures
 
 ### Reactivity System
 - **REF_REACTIVE_CONFUSION**: Incorrect reactive primitive usage
 - **DESTRUCTURING_REACTIVITY_LOSS**: Breaking reactive connections
 - **COMPUTED_SIDE_EFFECTS**: Impure computed properties
 - **DEEP_WATCHER_OVERUSE**: Expensive deep observation
+- **WATCHER_SHOULD_BE_COMPUTED**: Watcher that should be computed
 
 ### State Management
 - **VUEX_ASYNC_IN_MUTATION**: Asynchronous mutation handlers
