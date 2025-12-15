@@ -70,7 +70,7 @@ vue-anti-pattern-detector analyze <patterns> [options]
 ```
 
 **Arguments:**
-- `patterns`: Glob patterns for Vue files (e.g., `"src/**/*.vue"`, `"components/**/*.vue"`)
+- `patterns`: File paths, directory paths, or glob patterns for Vue files (e.g., `"src/**/*.vue"`, `"components"`, `"MyComponent.vue"`)
 
 **Options:**
 - `-f, --format <format>`: Output format (`console`, `json`, `html`) [default: `console`]
@@ -81,17 +81,23 @@ vue-anti-pattern-detector analyze <patterns> [options]
 
 **Examples:**
 ```bash
-# Basic analysis
+# Analyze entire directory (automatically finds all .vue files)
+vue-anti-pattern-detector analyze "src"
+
+# Basic analysis with glob pattern
 vue-anti-pattern-detector analyze "src/**/*.vue"
 
+# Analyze specific file
+vue-anti-pattern-detector analyze "src/components/MyComponent.vue"
+
 # Generate HTML report with verbose output
-vue-anti-pattern-detector analyze "src/**/*.vue" --format html --output analysis.html --verbose
+vue-anti-pattern-detector analyze "src" --format html --output analysis.html --verbose
 
 # Use custom configuration
-vue-anti-pattern-detector analyze "src/**/*.vue" --config .vue-analysis.json
+vue-anti-pattern-detector analyze "src" --config .vue-analysis.json
 
 # Override specific thresholds
-vue-anti-pattern-detector analyze "src/**/*.vue" --threshold-template-expression-length 50
+vue-anti-pattern-detector analyze "src" --threshold-template-expression-length 50
 ```
 
 #### Initialize Configuration
