@@ -77,6 +77,7 @@ vue-anti-pattern-detector analyze <patterns> [options]
 - `-o, --output <file>`: Save report to file
 - `-v, --verbose`: Show detailed refactoring suggestions
 - `-c, --config <file>`: Use custom configuration file
+- `--exclude <patterns>`: Comma-separated list of patterns to exclude (e.g., `"node_modules/**,dist/**"`)
 - `--threshold-*`: Override specific thresholds (see configuration)
 
 **Examples:**
@@ -95,6 +96,9 @@ vue-anti-pattern-detector analyze "src" --format html --output analysis.html --v
 
 # Use custom configuration
 vue-anti-pattern-detector analyze "src" --config .vue-analysis.json
+
+# Exclude specific directories
+vue-anti-pattern-detector analyze "src" --exclude "node_modules/**,dist/**,tests/**"
 
 # Override specific thresholds
 vue-anti-pattern-detector analyze "src" --threshold-template-expression-length 50
@@ -156,6 +160,26 @@ This creates `.vue-anti-pattern-detector.json`:
 | `componentPropsCount` | 15 | Maximum props per component |
 | `virtualizationThreshold` | 500 | Minimum list size requiring virtualization |
 | `shallowReactivityThreshold` | 1000 | Object size threshold for shallow reactivity |
+
+### Exclude Patterns
+
+The `exclude` array allows you to specify glob patterns for directories and files that should be excluded from analysis:
+
+```json
+{
+  "exclude": [
+    "node_modules/**",
+    "dist/**",
+    "**/*.test.vue",
+    "**/*.spec.vue",
+    "coverage/**"
+  ]
+}
+```
+
+- Supports glob patterns (e.g., `**/*.test.vue` excludes all test files)
+- Patterns are matched against absolute file paths
+- Common exclusions: `node_modules/**`, `dist/**`, test files, build artifacts
 
 ## Programmatic API
 

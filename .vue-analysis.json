@@ -1,0 +1,17 @@
+{
+  "thresholds": {
+    "templateExpressionLength": 40,
+    "templateDepth": 6,
+    "componentScriptLength": 500,
+    "componentMethodCount": 20,
+    "componentPropsCount": 15,
+    "componentComputedCount": 10
+  },
+  "exclude": [
+    "node_modules/**",
+    "dist/**",
+    "**/*.test.vue",
+    "**/*.spec.vue"
+  ],
+  "verbose": false
+}
