@@ -14,6 +14,7 @@ Improve your Vue.js development workflow with comprehensive code analysis, autom
 - ✅ **100% Test Coverage**: Comprehensive test files for all detector categories
 - ✅ **Production Ready**: CLI, programmatic API, and multiple output formats
 - ✅ **Bug-Free**: All critical parsing and detection issues resolved
+- ✅ **Exclude Patterns Fixed**: Directory-based searches now properly exclude specified patterns
 
 ## Features
 
@@ -77,8 +78,11 @@ vue-anti-pattern-detector analyze <patterns> [options]
 - `-o, --output <file>`: Save report to file
 - `-v, --verbose`: Show detailed refactoring suggestions
 - `-c, --config <file>`: Use custom configuration file
-- `--exclude <patterns>`: Comma-separated list of patterns to exclude (e.g., `"node_modules/**,dist/**"`)
-- `--threshold-*`: Override specific thresholds (see configuration)
+- `--exclude <patterns>`: Comma-separated list of patterns to exclude (e.g., `"node_modules/**,dist/**"`) - automatically adjusted for directory searches
+- `--threshold-template-expression-length <number>`: Override template expression length threshold
+- `--threshold-template-depth <number>`: Override template depth threshold
+- `--threshold-component-script-length <number>`: Override component script length threshold
+- `--threshold-component-method-count <number>`: Override component method count threshold
 
 **Examples:**
 ```bash
@@ -101,7 +105,7 @@ vue-anti-pattern-detector analyze "src" --config .vue-analysis.json
 vue-anti-pattern-detector analyze "src" --exclude "node_modules/**,dist/**,tests/**"
 
 # Override specific thresholds
-vue-anti-pattern-detector analyze "src" --threshold-template-expression-length 50
+vue-anti-pattern-detector analyze "src" --threshold-template-expression-length 50 --threshold-component-script-length 600
 ```
 
 #### Initialize Configuration
@@ -109,14 +113,14 @@ vue-anti-pattern-detector analyze "src" --threshold-template-expression-length 5
 vue-anti-pattern-detector init [--force]
 ```
 
-Creates a default configuration file (`.vue-anti-pattern-detector.json`) with all available thresholds and options.
+Creates a default configuration file (`.vue-analysis.json`) with all available thresholds and options.
 
-#### List Available Patterns
+#### Run Tests
 ```bash
-vue-anti-pattern-detector patterns
+vue-anti-pattern-detector test [options]
 ```
 
-Shows all 34 anti-pattern detectors organized by category.
+Runs the detector against test files in the `test-files` directory to verify functionality.
 
 ## Configuration
 
@@ -126,7 +130,7 @@ Create a configuration file using:
 vue-anti-pattern-detector init
 ```
 
-This creates `.vue-anti-pattern-detector.json`:
+This creates `.vue-analysis.json`:
 
 ```json
 {
@@ -135,17 +139,16 @@ This creates `.vue-anti-pattern-detector.json`:
     "templateDepth": 6,
     "componentScriptLength": 500,
     "componentMethodCount": 20,
-    "virtualizationThreshold": 500,
-    "shallowReactivityThreshold": 1000
+    "componentPropsCount": 15,
+    "componentComputedCount": 10
   },
   "exclude": [
     "node_modules/**",
     "dist/**",
-    "**/*.test.vue"
+    "**/*.test.vue",
+    "**/*.spec.vue"
   ],
-  "rules": {
-    // Enable/disable specific rules
-  }
+  "verbose": false
 }
 ```
 
@@ -158,8 +161,7 @@ This creates `.vue-anti-pattern-detector.json`:
 | `componentScriptLength` | 500 | Maximum lines in component script |
 | `componentMethodCount` | 20 | Maximum methods per component |
 | `componentPropsCount` | 15 | Maximum props per component |
-| `virtualizationThreshold` | 500 | Minimum list size requiring virtualization |
-| `shallowReactivityThreshold` | 1000 | Object size threshold for shallow reactivity |
+| `componentComputedCount` | 10 | Maximum computed properties per component |
 
 ### Exclude Patterns
 
@@ -178,7 +180,8 @@ The `exclude` array allows you to specify glob patterns for directories and file
 ```
 
 - Supports glob patterns (e.g., `**/*.test.vue` excludes all test files)
-- Patterns are matched against absolute file paths
+- When analyzing directories, patterns are automatically adjusted relative to the search root
+- For example, when analyzing `src/`, the pattern `node_modules/**` becomes `src/node_modules/**`
 - Common exclusions: `node_modules/**`, `dist/**`, test files, build artifacts
 
 ## Programmatic API

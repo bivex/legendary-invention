@@ -122,7 +122,29 @@ program
 
         const globOptions = { absolute: true };
         if (excludePatterns.length > 0) {
-          globOptions.ignore = excludePatterns;
+          // Adjust exclude patterns to be relative to the search root
+          let adjustedExcludePatterns = excludePatterns;
+
+          // If globPattern starts with a directory path (like 'vue3-enterprise-boilerplate/**/*.vue'),
+          // we need to prefix exclude patterns with that directory
+          const pathParts = globPattern.split('/');
+          if (pathParts.length > 1 && !pathParts[0].includes('*')) {
+            // Find the directory part (everything before the first **)
+            const dirIndex = pathParts.findIndex(part => part.includes('**'));
+            if (dirIndex > 0) {
+              const searchRoot = pathParts.slice(0, dirIndex).join('/');
+              adjustedExcludePatterns = excludePatterns.map(pattern => {
+                // If pattern already starts with the search root, use as-is
+                if (pattern.startsWith(searchRoot)) {
+                  return pattern;
+                }
+                // Otherwise, prefix with search root
+                return searchRoot + '/' + pattern;
+              });
+            }
+          }
+
+          globOptions.ignore = adjustedExcludePatterns;
         }
         const matches = glob.sync(globPattern, globOptions);
         files.push(...matches);
