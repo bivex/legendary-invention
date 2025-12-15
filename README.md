@@ -293,3 +293,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - [ESLint Plugin Vue](https://eslint.vuejs.org/) - ESLint rules for Vue.js development
 - [VueUse](https://vueuse.org/) - Essential Vue.js Composition API utilities
 - [Vite](https://vitejs.dev/) - Fast Vue.js build tool and development server
+- [Formal Notation Specification](formal_notation.md) - Mathematical foundations for detector implementation
