@@ -1,22 +1,26 @@
 # Vue Anti-Pattern Detector
 
-A comprehensive Vue.js static analysis tool that detects 67+ anti-patterns based on formal Z-notation specifications. This tool helps maintain code quality by identifying problematic patterns that can lead to bugs, performance issues, and maintainability problems.
+A comprehensive Vue.js static analysis tool that detects 67+ anti-patterns based on formal Z-notation specifications. This powerful Vue.js code quality tool helps developers maintain high standards by identifying problematic patterns that can cause bugs, performance issues, security vulnerabilities, and maintainability problems in Vue.js applications.
+
+**Vue.js Code Quality Tool** | **Static Analysis** | **Performance Optimization** | **Security Analysis**
+
+Improve your Vue.js development workflow with comprehensive code analysis, automated anti-pattern detection, and actionable insights for better Vue.js applications. Perfect for Vue.js code review, CI/CD integration, and maintaining high-quality Vue.js codebase standards.
 
 ## Features
 
-- **67 Anti-Pattern Detectors** across 6 categories:
-  - Template anti-patterns (v-if/v-for conflicts, missing keys, complex expressions)
-  - Component architecture smells (god components, prop drilling, tight coupling)
-  - Reactivity system issues (ref/reactive confusion, side effects in computed)
-  - State management problems (Vuex async mutations, Pinia circular dependencies)
-  - Performance bottlenecks (missing virtualization, memory leaks)
-  - TypeScript integration issues (untyped props, missing type safety)
+- **67+ Anti-Pattern Detectors** across 6 comprehensive categories for Vue.js development:
+  - **Template Anti-Patterns**: Detect v-if/v-for conflicts, missing keys, complex expressions, XSS risks, and deep nesting issues
+  - **Component Architecture**: Identify god components, prop drilling, tight coupling, and naming conflicts
+  - **Reactivity System**: Catch ref/reactive confusion, destructuring reactivity loss, computed side effects, and deep watcher overuse
+  - **State Management**: Vuex async mutations, Pinia circular dependencies, monolithic stores, and untyped dependency injection
+  - **Performance Optimization**: Large list virtualization issues, missing shallow reactivity, memory leaks, and tree-shaking failures
+  - **TypeScript Integration**: Untyped props, emits, and ref type inference problems
 
-- **Formal Mathematical Detection** using Z-notation predicates
-- **Configurable Severity Levels** (CRITICAL, HIGH, MEDIUM, LOW)
-- **Multiple Output Formats** (console, JSON, HTML reports)
-- **CLI and Programmatic API** support
-- **Customizable Thresholds** for different project requirements
+- **Formal Mathematical Detection** using Z-notation predicates for precise Vue.js code analysis
+- **Configurable Severity Levels** (CRITICAL, HIGH, MEDIUM, LOW) for prioritized Vue.js code quality
+- **Multiple Output Formats** (console, JSON, HTML reports) for flexible Vue.js static analysis
+- **CLI and Programmatic API** support for seamless integration in Vue.js workflows
+- **Customizable Thresholds** for different project requirements and Vue.js best practices
 
 ## Installation
 
@@ -24,22 +28,24 @@ A comprehensive Vue.js static analysis tool that detects 67+ anti-patterns based
 npm install -g vue-anti-pattern-detector
 ```
 
-Or for local development:
+Or install locally for project-specific Vue.js development and CI/CD integration:
 ```bash
-npm install
+npm install --save-dev vue-anti-pattern-detector
 ```
 
 ## Quick Start
 
-Analyze Vue files in your project:
+Get started with Vue.js static analysis and code quality improvement in minutes. Analyze your Vue.js files for anti-patterns and potential issues:
 
 ```bash
+# Basic Vue.js code analysis
 vue-anti-pattern-detector analyze "src/**/*.vue"
 ```
 
-Generate an HTML report:
+Generate detailed HTML reports for Vue.js code review and documentation:
 
 ```bash
+# Generate comprehensive Vue.js analysis report
 vue-anti-pattern-detector analyze "src/**/*.vue" --format html --output report.html
 ```
 
@@ -258,6 +264,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Related
 
-- [Vue.js Style Guide](https://vuejs.org/style-guide/)
-- [Vue Mess Detector](https://github.com/dennybiasiolli/vue-mess-detector)
-- [ESLint Plugin Vue](https://eslint.vuejs.org/)
+- [Vue.js Official Style Guide](https://vuejs.org/style-guide/) - Vue.js best practices and coding standards
+- [Vue Mess Detector](https://github.com/dennybiasiolli/vue-mess-detector) - Alternative Vue.js code quality tool
+- [ESLint Plugin Vue](https://eslint.vuejs.org/) - ESLint rules for Vue.js development
+- [VueUse](https://vueuse.org/) - Essential Vue.js Composition API utilities
+- [Vite](https://vitejs.dev/) - Fast Vue.js build tool and development server
